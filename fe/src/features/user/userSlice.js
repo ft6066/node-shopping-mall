@@ -8,10 +8,16 @@ export const loginWithEmail = createAsyncThunk(
   "user/loginWithEmail",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await api.post("/user/login", { email, password });
-      if (response.status === 200) {
-      }
-    } catch (error) {}
+      const response = await api.post("/auth/login", { email, password });
+      //성공
+      //LoginPage
+      sessionStorage.setItem("token", response.data.token);
+      return response.data;
+    } catch (error) {
+      //실패
+      //실패시 생긴 에러값을 reducer에 저장
+      return rejectWithValue(error.error);
+    }
   }
 );
 
@@ -87,6 +93,18 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.registrationError = action.payload;
+      })
+      .addCase(loginWithEmail.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loginWithEmail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.loginError = null;
+      })
+      .addCase(loginWithEmail.rejected, (state, action) => {
+        state.loading = false;
+        state.loginError = action.payload;
       });
   },
 });
