@@ -15,7 +15,7 @@ userController.createUser = async (req, res) => {
     password = await bcrypt.hash(password, salt);
     const newUser = new User({
       email,
-      password,
+      password, //:hash
       name,
       level: level ? level : "customer",
     });
