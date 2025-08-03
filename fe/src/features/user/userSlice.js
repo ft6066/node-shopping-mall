@@ -26,7 +26,10 @@ export const loginWithGoogle = createAsyncThunk(
   async (token, { rejectWithValue }) => {}
 );
 
-export const logout = () => (dispatch) => {};
+export const logout = () => (dispatch) => {
+  sessionStorage.removeItem("token");
+  dispatch(userSlice.actions.clearUser());
+};
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (
@@ -64,7 +67,14 @@ export const registerUser = createAsyncThunk(
 
 export const loginWithToken = createAsyncThunk(
   "user/loginWithToken",
-  async (_, { rejectWithValue }) => {}
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get("/user/me");
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 const userSlice = createSlice({
@@ -80,6 +90,10 @@ const userSlice = createSlice({
     clearErrors: (state) => {
       state.loginError = null;
       state.registrationError = null;
+    },
+    clearUser: (state) => {
+      state.user = null;
+      state.success = false;
     },
   },
   extraReducers: (builder) => {
@@ -105,8 +119,12 @@ const userSlice = createSlice({
       .addCase(loginWithEmail.rejected, (state, action) => {
         state.loading = false;
         state.loginError = action.payload;
+      })
+      .addCase(loginWithToken.fulfilled, (state, action) => {
+        state.user = action.payload.user;
       });
   },
 });
 export const { clearErrors } = userSlice.actions;
+export const { clearUser } = userSlice.actions;
 export default userSlice.reducer;
