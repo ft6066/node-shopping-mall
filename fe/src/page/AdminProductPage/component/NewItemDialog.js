@@ -59,7 +59,11 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const handleClose = () => {
     //모든걸 초기화시키고;
+    setFormData({ ...InitialFormData });
+    setStock([]);
+    setStockError(false);
     // 다이얼로그 닫아주기
+    setShowDialog(false);
   };
 
   const handleSubmit = (event) => {
@@ -76,6 +80,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     // [['M',2]] 에서 {M:2}로
     if (mode === "new") {
       //새 상품 만들기
+      dispatch(createProduct({ ...formData, stock: totalStock }));
     } else {
       // 상품 수정하기
     }
@@ -88,6 +93,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   };
 
   const addStock = () => {
+    setStockError(false); //에러 메시지를 초기화
     //재고타입 추가시 배열에 새 배열 추가
     setStock([...stock, []]);
   };
@@ -207,12 +213,12 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                     required
                     defaultValue={item[0] ? item[0].toLowerCase() : ""}
                   >
-                    <option value="" disabled selected hidden>
+                    <option value="" disabled hidden>
                       Please Choose...
                     </option>
                     {SIZE.map((item, index) => (
                       <option
-                        inValid={true}
+                        // inValid={true}
                         value={item.toLowerCase()}
                         disabled={stock.some(
                           (size) => size[0] === item.toLowerCase()
