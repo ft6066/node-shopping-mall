@@ -49,7 +49,9 @@ const ProductTable = ({ header, data, deleteItem, openEditForm }) => {
               </tr>
             ))
           ) : (
-            <tr>No Data to show</tr>
+            <tr>
+              <td>No Data to show</td>
+            </tr>
           )}
         </tbody>
       </Table>
