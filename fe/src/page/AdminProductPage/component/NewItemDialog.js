@@ -8,6 +8,7 @@ import {
   clearError,
   createProduct,
   editProduct,
+  resetSuccess,
 } from "../../../features/product/productSlice";
 
 const InitialFormData = {
@@ -35,6 +36,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   useEffect(() => {
     if (success) setShowDialog(false);
+    dispatch(resetSuccess());
   }, [success]);
 
   useEffect(() => {
@@ -62,6 +64,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     setFormData({ ...InitialFormData });
     setStock([]);
     setStockError(false);
+    dispatch(resetSuccess());
     // 다이얼로그 닫아주기
     setShowDialog(false);
   };
@@ -83,6 +86,9 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
       dispatch(createProduct({ ...formData, stock: totalStock }));
     } else {
       // 상품 수정하기
+      dispatch(
+        editProduct({ ...formData, stock: totalStock, id: selectedProduct._id })
+      );
     }
   };
 
