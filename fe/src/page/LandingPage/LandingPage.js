@@ -21,7 +21,7 @@ const LandingPage = () => {
     );
   }, [query]);
 
-  if (loading || !selectedProduct)
+  if (loading)
     return (
       <ColorRing
         visible={true}
