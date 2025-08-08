@@ -19,7 +19,7 @@ const AdminProductPage = () => {
   const { productList, totalPageNum } = useSelector((state) => state.product);
   const [showDialog, setShowDialog] = useState(false);
   const [searchQuery, setSearchQuery] = useState({
-    page: query.get("page") || 1,
+    page: Number(query.get("page")) || 1,
     name: query.get("name") || "",
   }); //검색 조건들을 저장하는 객체
 
