@@ -63,7 +63,9 @@ export const deleteCartItem = createAsyncThunk(
           status: "success",
         })
       );
-      dispatch(getCartList());
+
+      await dispatch(getCartList());
+
       return response.data.data;
     } catch (error) {
       dispatch(
@@ -111,7 +113,7 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     initialCart: (state) => {
-      state.cartItemCount = 0;
+      return initialState;
     },
     // You can still add reducers here for non-async actions if necessary
   },
@@ -140,6 +142,7 @@ const cartSlice = createSlice({
           (total, item) => total + item.productId.price * item.qty,
           0
         );
+        state.cartItemCount = action.payload.length;
       })
       .addCase(getCartList.rejected, (state, action) => {
         state.loading = false;
@@ -151,7 +154,6 @@ const cartSlice = createSlice({
       .addCase(deleteCartItem.fulfilled, (state, action) => {
         state.loading = false;
         state.error = "";
-        state.cartItemCount = action.payload.length;
       })
       .addCase(deleteCartItem.rejected, (state, action) => {
         state.loading = false;

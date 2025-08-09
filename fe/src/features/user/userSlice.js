@@ -29,6 +29,7 @@ export const loginWithGoogle = createAsyncThunk(
 export const logout = () => (dispatch) => {
   sessionStorage.removeItem("token");
   dispatch(userSlice.actions.clearUser());
+  dispatch(initialCart());
 };
 export const registerUser = createAsyncThunk(
   "user/registerUser",
