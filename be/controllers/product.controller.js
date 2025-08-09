@@ -85,13 +85,6 @@ productController.updateProduct = async (req, res, next) => {
       status,
     } = req.body;
 
-    const existingProduct = await Product.findOne({ sku });
-    if (existingProduct) {
-      return res
-        .status(400)
-        .json({ status: "fail", error: "이미 존재하는 sku입니다." });
-    }
-
     // 유효성 검사: 재고는 0 이상이어야 함
     for (const key in stock) {
       if (stock[key] < 0) {
