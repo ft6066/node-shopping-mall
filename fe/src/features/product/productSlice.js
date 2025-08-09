@@ -82,6 +82,12 @@ export const editProduct = createAsyncThunk(
       dispatch(getProductList({ page: 1 }));
       return response.data.data;
     } catch (error) {
+      dispatch(
+        showToastMessage({
+          message: "상품 수정 실패",
+          status: "error",
+        })
+      );
       return rejectWithValue(error.error);
     }
   }
