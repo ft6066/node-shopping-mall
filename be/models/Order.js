@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const OrderSchema = Schema(
   {
     userId: { type: mongoose.ObjectId, ref: User },
-    shipTo: { type: String, required: true },
+    shipTo: { type: String, required: true }, //주소
     contact: { type: Object, required: true, default: 0 },
     totalPrice: { type: Number },
     status: { type: String },
