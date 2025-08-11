@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
-import User from "./User";
-import Product from "./Product";
+const User = require("../models/User");
+const Product = require("../models/Product");
+const Cart = require("../models/Cart");
 const Schema = mongoose.Schema;
 const OrderSchema = Schema(
   {
     userId: { type: mongoose.ObjectId, ref: User },
-    shipTo: { type: String, required: true }, //주소
+    shipTo: { type: Object, required: true }, //주소
     contact: { type: Object, required: true, default: 0 },
     totalPrice: { type: Number },
     status: { type: String },
@@ -29,6 +30,13 @@ OrderSchema.methods.toJSON = function () {
 
   return obj;
 };
+
+OrderSchema.post("save", async function () {
+  // 카트를 비워주자
+  const cart = await Cart.findOne({ userId: this.userId });
+  cart.items = [];
+  await cart.save();
+});
 
 const Order = mongoose.model("Order", OrderSchema);
 module.exports = Order;
