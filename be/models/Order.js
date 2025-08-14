@@ -9,7 +9,12 @@ const OrderSchema = Schema(
     shipTo: { type: Object, required: true }, //주소
     contact: { type: Object, required: true, default: 0 },
     totalPrice: { type: Number },
-    status: { type: String },
+    status: {
+      type: String,
+      enum: ["preparing", "shipping", "refund", "delivered"],
+      default: "preparing",
+    },
+    orderNum: { type: String },
     items: [
       {
         productId: { type: mongoose.ObjectId, ref: Product, required: true },
