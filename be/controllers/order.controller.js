@@ -66,8 +66,9 @@ orderController.getOrder = async (req, res) => {
 
 orderController.getOrderList = async (req, res) => {
   try {
-    const { page, ordernum } = req.query;
+    const { page, ordernum, limit } = req.query;
     const pageNum = parseInt(page) || 1; // 기본값 1
+    const limitNum = parseInt(limit) || PAGE_SIZE; // 기본값 PAGE_SIZE
 
     let cond = {};
     if (ordernum) {
@@ -81,11 +82,11 @@ orderController.getOrderList = async (req, res) => {
         model: "Product",
         select: "image name",
       })
-      .skip((pageNum - 1) * PAGE_SIZE)
-      .limit(PAGE_SIZE);
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum);
 
     const totalItemNum = await Order.find(cond).countDocuments();
-    const totalPageNum = Math.ceil(totalItemNum / PAGE_SIZE);
+    const totalPageNum = Math.ceil(totalItemNum / limitNum);
 
     res.status(200).json({ status: "success", data: orderList, totalPageNum });
   } catch (error) {
