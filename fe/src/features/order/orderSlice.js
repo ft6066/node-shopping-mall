@@ -51,7 +51,10 @@ export const getOrderList = createAsyncThunk(
       const response = await api.get("/order", { params: { ...query } });
       if (response.status !== 200) throw new Error(response.error);
 
-      return response.data.data;
+      return {
+        orderList: response.data.data,
+        totalPageNum: response.data.totalPageNum,
+      };
     } catch (error) {
       return rejectWithValue(error.error);
     }
@@ -126,7 +129,8 @@ const orderSlice = createSlice({
       .addCase(getOrderList.fulfilled, (state, action) => {
         state.loading = false;
         state.error = "";
-        state.orderList = action.payload;
+        state.orderList = action.payload.orderList; // 주문 데이터
+        state.totalPageNum = action.payload.totalPageNum; // 총 페이지 수
       })
       .addCase(getOrderList.rejected, (state, action) => {
         state.loading = false;

@@ -18,7 +18,7 @@ const AdminOrderPage = () => {
   const dispatch = useDispatch();
   const { orderList, totalPageNum } = useSelector((state) => state.order);
   const [searchQuery, setSearchQuery] = useState({
-    page: query.get("page") || 1,
+    page: Number(query.get("page")) || 1,
     ordernum: query.get("ordernum") || "",
   });
   const [open, setOpen] = useState(false);
@@ -35,14 +35,18 @@ const AdminOrderPage = () => {
   ];
 
   useEffect(() => {
-    dispatch(getOrderList({ ...searchQuery }));
-  }, [query]);
+    dispatch(
+      getOrderList({ ...searchQuery, page: Number(searchQuery.page), limit: 2 })
+    );
+  }, [searchQuery]);
 
   useEffect(() => {
-    if (searchQuery.ordernum === "") {
-      delete searchQuery.ordernum;
+    const paramsObj = { ...searchQuery };
+    if (paramsObj.ordernum === "") {
+      delete paramsObj.ordernum;
     }
-    const params = new URLSearchParams(searchQuery);
+    paramsObj.page = Number(paramsObj.page);
+    const params = new URLSearchParams(paramsObj);
     const queryString = params.toString();
 
     navigate("?" + queryString);
@@ -54,7 +58,7 @@ const AdminOrderPage = () => {
   };
 
   const handlePageClick = ({ selected }) => {
-    setSearchQuery({ ...searchQuery, page: selected + 1 });
+    setSearchQuery({ ...searchQuery, page: Number(selected + 1) });
   };
 
   const handleClose = () => {
@@ -83,7 +87,7 @@ const AdminOrderPage = () => {
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
           pageCount={totalPageNum}
-          forcePage={searchQuery.page - 1}
+          forcePage={Number(searchQuery.page) - 1}
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           pageClassName="page-item"
